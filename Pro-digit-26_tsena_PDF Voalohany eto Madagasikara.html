@@ -1,0 +1,1780 @@
+<!DOCTYPE html>
+<html lang="mg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRO-DIGIT-26 — PDF Boutique</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  :root {
+    --gold: #8BC34A;
+    --gold-dark: #6FA23A;
+    --bg: #0B0B0B;
+    --border-soft: #1A1A1A;
+    --border-med: #333333;
+    --border-faint: #2a2a2a;
+    --text-muted: #A0A0A0;
+    --text-dim: #555555;
+    --text-dim2: #888888;
+  }
+  * { box-sizing: border-box; }
+  html, body { overflow-x: hidden; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  button, input { font-family: inherit; }
+
+  a:focus-visible, button:focus-visible, input:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
+
+  /* ---------- entrance animation ---------- */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes overlayFade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes modalPop {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  .anim { opacity: 0; animation: fadeInUp 0.7s cubic-bezier(0.16,1,0.3,1) forwards; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .anim { animation: none; opacity: 1; }
+    #modalOverlay, #modalCard, #buyModalOverlay { animation: none !important; }
+    * { transition: none !important; }
+  }
+
+  /* ---------- header ---------- */
+  .site-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .logo-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    user-select: none;
+    transition: transform 0.15s ease;
+  }
+  .logo-btn:active { transform: scale(0.95); }
+  .logo-badge {
+    background: var(--gold);
+    color: var(--bg);
+    font-weight: 700;
+    font-size: 10px;
+    padding: 4px 6px;
+    border-radius: 4px;
+  }
+  .logo-text { font-weight: 900; font-size: 18px; letter-spacing: 0.5px; color: #fff; }
+  .guide-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    background: none;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .guide-btn:hover { background: rgba(139,195,74,0.1); transform: translateY(-2px); }
+  .guide-btn:active { transform: scale(0.95); }
+
+  .header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+  .lang-switch {
+    display: flex; align-items: center; gap: 2px;
+    border: 1px solid var(--border-med); border-radius: 999px; padding: 2px;
+  }
+  .lang-btn {
+    border: none; background: none; color: var(--text-muted);
+    font-size: 11px; font-weight: 800; letter-spacing: 0.3px;
+    padding: 5px 10px; border-radius: 999px; cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .lang-btn:hover { color: #fff; }
+  .lang-btn.active { background: var(--gold); color: var(--bg); }
+  .lang-btn:active { transform: scale(0.95); }
+
+  /* ---------- hero ---------- */
+  .hero { padding: 64px 20px 72px; max-width: 576px; margin: 0 auto; text-align: center; }
+  .eyebrow { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; }
+  .eyebrow-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
+  .eyebrow-text { font-size: 11px; font-weight: 700; letter-spacing: 0.5px; color: var(--gold); }
+  .hero-title { font-weight: 900; font-size: 40px; line-height: 1.05; margin: 0 0 24px; }
+  .hero-title span { display: block; }
+  .hero-title .white { color: #fff; }
+  .hero-title .gold { color: var(--gold); }
+  .hero-desc { color: var(--text-muted); font-size: 16px; line-height: 1.5; margin: 0 0 24px; }
+  .chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 36px; }
+  .chip {
+    display: flex; align-items: center; gap: 6px;
+    border: 1px solid rgba(139,195,74,0.3);
+    background: rgba(139,195,74,0.05);
+    color: var(--gold);
+    font-size: 12px; font-weight: 700;
+    padding: 6px 12px; border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .chip:hover { background: rgba(139,195,74,0.15); transform: translateY(-2px); }
+  .hero-buttons { display: flex; flex-direction: column; align-items: center; gap: 14px; max-width: 384px; margin: 0 auto; }
+  .btn-primary, .btn-secondary {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 14px; border-radius: 8px; font-size: 14px;
+    text-decoration: none; border: none; cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .btn-primary { background: var(--gold); color: var(--bg); font-weight: 900; }
+  .btn-primary:hover { background: var(--gold-dark); transform: translateY(-2px); }
+  .btn-secondary { border: 1px solid var(--border-med); color: #fff; background: none; font-weight: 700; font-size: 13px; }
+  .btn-secondary:hover { border-color: #555; transform: translateY(-2px); }
+  .btn-primary:active, .btn-secondary:active { transform: scale(0.95); }
+
+  @media (min-width: 640px) {
+    .site-header { padding: 16px 32px; }
+    .hero { padding: 96px 32px 96px; }
+    .hero-title { font-size: 56px; }
+    .hero-desc { font-size: 18px; }
+  }
+
+  /* ---------- catalogue ---------- */
+  .catalogue { padding: 64px 20px 80px; border-top: 1px solid var(--border-soft); }
+  .catalogue-inner { max-width: 1024px; margin: 0 auto; }
+  .catalogue-eyebrow { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; color: var(--gold); font-size: 11px; font-weight: 700; letter-spacing: 0.5px; }
+  .catalogue-title { font-size: 24px; font-weight: 900; margin: 0 0 20px; }
+  .catalogue-title .gold { color: var(--gold); }
+
+  .category-tabs {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-bottom: 28px;
+  }
+  .category-tab {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 12px; font-weight: 700;
+    padding: 9px 16px; border-radius: 999px;
+    border: 1px solid var(--border-med);
+    background: none; color: var(--text-muted);
+    cursor: pointer; transition: all 0.15s ease;
+  }
+  .category-tab:hover { border-color: #555; color: #fff; }
+  .category-tab.active { background: var(--gold); border-color: var(--gold); color: var(--bg); }
+
+  .level-tabs {
+    display: flex; gap: 8px; overflow-x: auto;
+    padding-bottom: 12px; margin-bottom: 24px;
+    scrollbar-width: thin;
+  }
+  .level-tabs::-webkit-scrollbar { height: 5px; }
+  .level-tabs::-webkit-scrollbar-thumb { background: var(--border-med); border-radius: 3px; }
+  .level-tab {
+    flex-shrink: 0; white-space: nowrap;
+    font-size: 12px; font-weight: 700;
+    padding: 6px 14px; border-radius: 999px;
+    border: 1px solid var(--border-med);
+    background: none; color: var(--text-muted);
+    cursor: pointer; transition: all 0.15s ease;
+  }
+  .level-tab:hover { border-color: #555; color: #fff; }
+  .level-tab.active { background: var(--gold); border-color: var(--gold); color: var(--bg); }
+
+  .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .product-card {
+    border: 1px solid var(--border-med); border-radius: 12px; padding: 14px;
+    display: flex; flex-direction: column;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+  .product-card:hover { border-color: rgba(139,195,74,0.5); transform: translateY(-3px); }
+  .product-thumb {
+    position: relative;
+    aspect-ratio: 3 / 4; background: #161616; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 12px; color: #3a3a3a; font-size: 24px;
+    overflow: hidden;
+  }
+  .product-hover-cta {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    background: rgba(139,195,74,0.92); color: var(--bg);
+    font-size: 12px; font-weight: 900;
+    opacity: 0; transition: opacity 0.2s ease;
+    cursor: pointer;
+  }
+  .product-card:hover .product-hover-cta { opacity: 1; }
+  .product-pill {
+    align-self: flex-start;
+    font-size: 9px; font-weight: 800; letter-spacing: 0.4px;
+    color: var(--gold); background: rgba(139,195,74,0.1);
+    border: 1px solid rgba(139,195,74,0.3);
+    padding: 3px 8px; border-radius: 999px;
+    margin-bottom: 8px; text-transform: uppercase;
+  }
+  .product-name { font-size: 13px; font-weight: 700; color: #fff; margin: 0 0 4px; line-height: 1.3; }
+  .product-desc { font-size: 11px; color: var(--text-dim2); line-height: 1.4; margin: 0 0 12px; }
+  .product-divider { border-top: 1px solid var(--border-faint); margin: 0 0 10px; }
+  .product-vidiny-label { font-size: 9px; font-weight: 700; letter-spacing: 0.5px; color: var(--text-dim); margin: 0 0 2px; text-transform: uppercase; }
+  .product-price { font-size: 15px; font-weight: 900; color: var(--gold); margin: 0 0 12px; }
+  .product-buy {
+    margin-top: auto; font-size: 11px; font-weight: 800;
+    border: 1px solid var(--gold); color: var(--gold);
+    padding: 9px; border-radius: 6px; text-align: center;
+    background: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    transition: all 0.2s ease;
+  }
+  .product-buy:hover { background: var(--gold); color: var(--bg); transform: translateY(-1px); }
+  .product-buy:active { transform: scale(0.96); }
+  .catalogue-note { font-size: 12px; color: var(--text-dim); margin-top: 20px; }
+
+  @media (min-width: 640px) {
+    .catalogue { padding: 80px 32px 96px; }
+    .catalogue-title { font-size: 30px; }
+    .product-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (min-width: 1024px) {
+    .product-grid { grid-template-columns: repeat(5, 1fr); }
+  }
+
+  /* ---------- admin modal ---------- */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px; z-index: 50;
+    animation: overlayFade 0.2s ease-out forwards;
+  }
+  .modal-overlay[hidden] { display: none; }
+  .modal-card {
+    width: 100%; max-width: 384px;
+    background: #1A1A1A; border: 1px solid var(--border-med);
+    border-radius: 12px; padding: 24px; position: relative;
+    animation: modalPop 0.25s cubic-bezier(0.16,1,0.3,1) forwards;
+  }
+  .modal-close {
+    position: absolute; top: 16px; right: 16px;
+    background: none; border: none; color: #888;
+    cursor: pointer; font-size: 16px; transition: color 0.2s ease;
+  }
+  .modal-close:hover { color: #fff; }
+  .modal-header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .modal-title { font-weight: 900; font-size: 16px; margin: 0; }
+  .modal-sub { color: var(--text-muted); font-size: 14px; margin: 0 0 16px; }
+  .modal-input {
+    width: 100%; background: transparent; border: 1px solid var(--border-med);
+    border-radius: 6px; padding: 8px 12px; font-size: 14px; color: #fff;
+    margin-bottom: 12px; outline: none; transition: border-color 0.2s ease;
+  }
+  .modal-input:focus { border-color: var(--gold); }
+  .modal-feedback { font-size: 14px; margin: 0 0 12px; }
+  .modal-feedback.success { color: #34d399; }
+  .modal-feedback.error { color: #f87171; }
+  .modal-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 8px; }
+  .modal-cancel {
+    background: none; border: none; color: var(--text-muted);
+    font-weight: 700; font-size: 14px; padding: 8px 12px; cursor: pointer;
+    transition: color 0.2s ease;
+  }
+  .modal-cancel:hover { color: #fff; }
+  .modal-confirm {
+    background: var(--gold); color: var(--bg); font-weight: 900; font-size: 14px;
+    padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .modal-confirm:hover { background: var(--gold-dark); }
+  .modal-cancel:active, .modal-confirm:active { transform: scale(0.95); }
+
+  /* ---------- anti-piracy watermark on thumbnails ---------- */
+  .product-thumb { user-select: none; -webkit-user-select: none; }
+  .product-thumb::after {
+    content: 'PRO-DIGIT-26';
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 900; letter-spacing: 1px;
+    color: rgba(255,255,255,0.045);
+    transform: rotate(-28deg);
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  /* ---------- buy modal ---------- */
+  .buy-modal-card { max-width: 420px; }
+  .buy-modal-price { color: var(--gold); font-weight: 900; font-size: 15px; margin: 0 0 18px; }
+  .pay-methods { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+  .pay-row {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    border: 1px solid var(--border-med); border-radius: 8px; padding: 10px 12px;
+  }
+  .pay-row-info { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .pay-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .pay-dot.mvola { background: #2ecc71; }
+  .pay-dot.orange { background: #ff8c00; }
+  .pay-dot.airtel { background: #e63946; }
+  .pay-name { font-size: 12px; font-weight: 800; color: #fff; }
+  .pay-number { font-size: 12px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+  .pay-copy-btn {
+    flex-shrink: 0; font-size: 11px; font-weight: 700;
+    border: 1px solid var(--border-med); color: var(--text-muted);
+    background: none; padding: 6px 10px; border-radius: 6px;
+    cursor: pointer; transition: all 0.15s ease;
+  }
+  .pay-copy-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .pay-copy-btn.copied { border-color: #34d399; color: #34d399; }
+  .pay-instructions { font-size: 12px; color: var(--text-muted); line-height: 1.6; margin: 0 0 18px; }
+  .pay-instructions b { color: #ddd; }
+  .buy-whatsapp-btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    background: #25D366; color: #06210f; font-weight: 900; font-size: 13px;
+    padding: 11px; border-radius: 8px; text-decoration: none;
+    transition: all 0.2s ease;
+  }
+  .buy-whatsapp-btn:hover { background: #20bd5a; transform: translateY(-1px); }
+  .pay-placeholder-note { font-size: 10px; color: var(--text-dim); margin: 10px 0 0; text-align: center; }
+
+  /* ---------- admin panel ---------- */
+  .admin-panel { padding: 40px 20px 64px; border-top: 1px solid var(--border-soft); background: rgba(139,195,74,0.03); }
+  .admin-panel[hidden] { display: none; }
+  .admin-panel-inner { max-width: 1024px; margin: 0 auto; }
+  .admin-panel-header { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 24px; }
+  .admin-panel-header i { color: var(--gold); font-size: 18px; }
+  .admin-panel-header h2 { font-size: 18px; font-weight: 900; margin: 0; flex: 1; min-width: 200px; }
+  .admin-exit-btn {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 700; color: var(--text-muted);
+    border: 1px solid var(--border-med); background: none;
+    padding: 8px 14px; border-radius: 999px; cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .admin-exit-btn:hover { border-color: #555; color: #fff; }
+  .admin-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 20px; }
+  .admin-stat-card { border: 1px solid var(--border-med); border-radius: 10px; padding: 16px; }
+  .admin-stat-num { display: block; font-size: 26px; font-weight: 900; color: var(--gold); margin-bottom: 4px; }
+  .admin-stat-label { font-size: 11px; color: var(--text-muted); }
+  .admin-note { font-size: 12px; color: var(--text-dim); line-height: 1.6; max-width: 640px; }
+  @media (min-width: 640px) { .admin-stats { grid-template-columns: repeat(4, 1fr); } }
+
+  /* ---------- admin CRUD blocks ---------- */
+  .admin-block {
+    border: 1px solid var(--border-med); border-radius: 12px;
+    padding: 20px; margin-bottom: 20px; background: rgba(255,255,255,0.015);
+  }
+  .admin-block-title {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 14px; font-weight: 900; margin: 0 0 4px; color: #fff;
+  }
+  .admin-block-title i { color: var(--gold); font-size: 13px; }
+  .admin-block-sub { font-size: 12px; color: var(--text-muted); margin: 0 0 16px; }
+  .admin-form-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+  @media (min-width: 640px) { .admin-form-grid.cols-2 { grid-template-columns: 1fr 1fr; } }
+  .admin-field { display: flex; flex-direction: column; gap: 6px; }
+  .admin-field label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; }
+  .admin-field input, .admin-field select, .admin-field textarea {
+    width: 100%; background: #101010; border: 1px solid var(--border-med);
+    border-radius: 6px; padding: 9px 12px; font-size: 13px; color: #fff;
+    outline: none; transition: border-color 0.2s ease;
+  }
+  .admin-field input:focus, .admin-field select:focus, .admin-field textarea:focus { border-color: var(--gold); }
+  .admin-field textarea { resize: vertical; min-height: 60px; }
+  .admin-field-check { flex-direction: row; align-items: center; gap: 8px; }
+  .admin-field-check input { width: auto; }
+  .admin-form-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+  .admin-btn {
+    display: flex; align-items: center; justify-content: center; gap: 7px;
+    font-size: 12px; font-weight: 800; padding: 10px 16px; border-radius: 6px;
+    border: 1px solid var(--gold); background: var(--gold); color: var(--bg);
+    cursor: pointer; transition: all 0.2s ease;
+  }
+  .admin-btn:hover { background: var(--gold-dark); }
+  .admin-btn:active { transform: scale(0.96); }
+  .admin-btn.ghost { background: none; color: var(--text-muted); border-color: var(--border-med); }
+  .admin-btn.ghost:hover { border-color: #555; color: #fff; }
+  .admin-btn.danger { background: none; color: #f87171; border-color: #7a2e2e; }
+  .admin-btn.danger:hover { background: rgba(248,113,113,0.1); }
+  .admin-form-msg { font-size: 12px; font-weight: 700; margin: 2px 0 0; min-height: 16px; }
+  .admin-form-msg.success { color: #34d399; }
+  .admin-form-msg.error { color: #f87171; }
+
+  .admin-filter-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+  .admin-filter-row select { background: #101010; border: 1px solid var(--border-med); color: #fff; border-radius: 6px; padding: 8px 10px; font-size: 12px; }
+
+  .admin-product-list { display: flex; flex-direction: column; gap: 8px; max-height: 520px; overflow-y: auto; padding-right: 4px; }
+  .admin-product-row {
+    display: flex; align-items: center; gap: 12px;
+    border: 1px solid var(--border-med); border-radius: 8px; padding: 10px 12px;
+  }
+  .admin-product-thumb {
+    width: 40px; height: 40px; flex-shrink: 0; border-radius: 6px; background: #161616;
+    display: flex; align-items: center; justify-content: center; color: var(--text-dim2);
+    overflow: hidden;
+  }
+  .admin-product-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .admin-product-info { flex: 1; min-width: 0; }
+  .admin-product-name { font-size: 12px; font-weight: 800; color: #fff; margin: 0 0 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .admin-product-meta { font-size: 11px; color: var(--text-dim2); }
+  .admin-product-meta .price { color: var(--gold); font-weight: 800; }
+  .admin-product-actions { display: flex; gap: 6px; flex-shrink: 0; }
+  .admin-icon-btn {
+    width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
+    border-radius: 6px; border: 1px solid var(--border-med); background: none; color: var(--text-muted);
+    cursor: pointer; transition: all 0.15s ease; font-size: 12px;
+  }
+  .admin-icon-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .admin-icon-btn.del:hover { border-color: #f87171; color: #f87171; }
+  .admin-empty { font-size: 12px; color: var(--text-dim); padding: 16px 0; text-align: center; }
+
+  .admin-cat-chip-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .admin-cat-chip {
+    display: flex; align-items: center; gap: 8px;
+    border: 1px solid var(--border-med); border-radius: 999px; padding: 6px 8px 6px 14px;
+    font-size: 11px; font-weight: 700; color: #fff;
+  }
+  .admin-cat-chip .admin-icon-btn { width: 22px; height: 22px; font-size: 10px; }
+
+  .admin-import-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
+  .admin-import-row .admin-field { flex: 1; min-width: 220px; }
+  .admin-import-help { font-size: 11px; color: var(--text-dim); line-height: 1.6; margin-top: 10px; }
+  .admin-import-help code { background: #161616; padding: 1px 5px; border-radius: 4px; color: #cbd5b5; }
+
+  /* ---------- footer ---------- */
+  .site-footer {
+    border-top: 1px solid var(--border-soft);
+    padding: 28px 20px; text-align: center;
+  }
+  .site-footer-inner { max-width: 1024px; margin: 0 auto; display: flex; flex-direction: column; gap: 6px; }
+  .site-footer-copyright { font-size: 12px; color: var(--text-dim2); }
+  .site-footer-copyright b { color: var(--text-muted); }
+  .site-footer-protect { font-size: 11px; color: var(--text-dim); }
+  @media (min-width: 640px) {
+    .site-footer-inner { flex-direction: row; justify-content: space-between; text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+  <header class="site-header anim">
+    <button class="logo-btn" id="logoBtn" type="button" aria-label="PRO-DIGIT-26">
+      <span class="logo-badge">PDF</span>
+      <span class="logo-text">PRO-DIGIT-26</span>
+    </button>
+    <div class="header-right">
+      <button class="guide-btn" type="button">
+        <i class="fa-solid fa-book-open"></i> <span id="guideBtnText">GUIDE PRATIQUE</span>
+      </button>
+      <div class="lang-switch" id="langSwitch" role="group" aria-label="Fiteny / Langue / Language">
+        <button type="button" class="lang-btn" data-lang="mg">MLG</button>
+        <button type="button" class="lang-btn" data-lang="fr">FR</button>
+        <button type="button" class="lang-btn" data-lang="en">ENG</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="hero">
+    <div class="eyebrow anim" style="animation-delay:100ms">
+      <span class="eyebrow-dot"></span>
+      <span class="eyebrow-text" id="heroEyebrowText">BOUTIQUE PDF NOMERIKA VOALOHANY ETO MADAGASIKARA</span>
+    </div>
+
+    <h1 class="hero-title anim" style="animation-delay:200ms">
+      <span class="white">PRO-DIGIT-26</span>
+      <span class="gold">PDF Boutique</span>
+    </h1>
+
+    <p class="hero-desc anim" style="animation-delay:320ms" id="heroDescText">
+      Karazana PDF maro ho an'ny lafiny samihafa amin'ny fiainana. Vidiana amin'ny MVola, Orange Money, sy Airtel Money.
+    </p>
+
+    <div class="chips anim" style="animation-delay:420ms">
+      <button type="button" class="chip" data-category="ASA"><i class="fa-solid fa-briefcase"></i> <span class="chip-label">ASA</span></button>
+      <button type="button" class="chip" data-category="FIANARANA"><i class="fa-solid fa-graduation-cap"></i> <span class="chip-label">FIANARANA</span></button>
+      <button type="button" class="chip" data-category="FAMORONANA_ASA"><i class="fa-solid fa-rocket"></i> <span class="chip-label">FAMORONANA ASA</span></button>
+      <button type="button" class="chip" data-category="HAFA"><i class="fa-solid fa-ellipsis"></i> <span class="chip-label">HAFA</span></button>
+    </div>
+
+    <div class="hero-buttons anim" style="animation-delay:520ms">
+      <a href="#catalogue" class="btn-primary">
+        <span id="catalogueBtnText">JEREO NY CATALOGUE</span> <i class="fa-solid fa-arrow-down"></i>
+      </a>
+    </div>
+  </main>
+
+  <section id="catalogue" class="catalogue">
+    <div class="catalogue-inner">
+      <div class="category-tabs" id="categoryTabs"></div>
+
+      <div class="catalogue-eyebrow">
+        <i class="fa-solid" id="catalogueIcon"></i>
+        <span id="catalogueLabel"></span>
+      </div>
+      <h2 class="catalogue-title">
+        <span id="catalogueIntroText">Ireo PDF ao amin'ny</span> <span class="gold" id="catalogueTitleName"></span><span class="gold" id="levelLabel"></span>
+      </h2>
+
+      <div class="level-tabs" id="levelTabs"></div>
+      <div class="product-grid" id="productGrid"></div>
+
+      <p class="catalogue-note" id="catalogueNoteText">
+        * Placeholder ireto — soloy amin'ny anarana, sary, ary vidiny tena izy rehefa vonona ny votoaty.
+      </p>
+    </div>
+  </section>
+
+  <div class="modal-overlay" id="modalOverlay" hidden>
+    <form class="modal-card" id="modalCard">
+      <button type="button" class="modal-close" id="modalCloseBtn" aria-label="Hanafoana">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div class="modal-header">
+        <i class="fa-solid fa-shield-halved" style="color: var(--gold);"></i>
+        <h2 class="modal-title" id="modalTitleAdminText">Espace Administration</h2>
+      </div>
+      <p class="modal-sub" id="modalSubAdminText">Ampidiro ny tenimiafinao (Password):</p>
+      <input type="password" class="modal-input" id="passwordInput" placeholder="Password" autocomplete="off">
+      <p class="modal-feedback" id="modalFeedback" hidden></p>
+      <div class="modal-actions">
+        <button type="button" class="modal-cancel" id="modalCancelBtn">Hanafoana</button>
+        <button type="submit" class="modal-confirm" id="modalConfirmBtnText">Hiditra</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal-overlay" id="buyModalOverlay" hidden>
+    <div class="modal-card buy-modal-card">
+      <button type="button" class="modal-close" id="buyModalCloseBtn" aria-label="Hanafoana">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div class="modal-header">
+        <i class="fa-solid fa-cart-shopping" style="color: var(--gold);"></i>
+        <h2 class="modal-title" id="buyModalTitle">Vidio ny PDF</h2>
+      </div>
+      <p class="buy-modal-price" id="buyModalPrice"></p>
+
+      <div class="pay-methods" id="payMethods"></div>
+
+      <p class="pay-instructions">
+        <b>1.</b> <span id="payInstruction1Text">Kopia ny laharana mifanaraka amin'ny fomba fandoavam-bola tianao.</span><br>
+        <b>2.</b> <span id="payInstruction2Text">Alefaso ny vola araka ny vidiny voalaza etsy ambony.</span><br>
+        <b>3.</b> <span id="payInstruction3Text">Tsindrio ny bokotra WhatsApp etsy ambany ka alefaso ny "capture" porofon'ny fandoavana mba handraisanao ny PDF avy hatrany.</span>
+      </p>
+
+      <a class="buy-whatsapp-btn" id="buyWhatsappBtn" target="_blank" rel="noopener">
+        <i class="fa-brands fa-whatsapp"></i> <span id="whatsappBtnText">Alefaso ny porofo amin'ny WhatsApp</span>
+      </a>
+      <p class="pay-placeholder-note" id="payPlaceholderNoteText">* Laharana placeholder ireto — soloy amin'ny tena laharanao rehefa vonona.</p>
+    </div>
+  </div>
+
+  <section id="adminPanel" class="admin-panel" hidden>
+    <div class="admin-panel-inner">
+      <div class="admin-panel-header">
+        <i class="fa-solid fa-shield-halved"></i>
+        <h2>Mode Admin — Miasa</h2>
+        <button type="button" id="adminExitBtn" class="admin-exit-btn">
+          Miverina ho pejy mpanjifa <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+      <div class="admin-stats">
+        <div class="admin-stat-card">
+          <span class="admin-stat-num" id="statTotalProducts">0</span>
+          <span class="admin-stat-label">Rakitra PDF ao amin'ny catalogue</span>
+        </div>
+        <div class="admin-stat-card">
+          <span class="admin-stat-num" id="statTotalCategories">0</span>
+          <span class="admin-stat-label">Sokajy misy</span>
+        </div>
+        <div class="admin-stat-card">
+          <span class="admin-stat-num">0</span>
+          <span class="admin-stat-label">Varotra vita (mbola tsy mifandray amin'ny backend)</span>
+        </div>
+        <div class="admin-stat-card">
+          <span class="admin-stat-num">3</span>
+          <span class="admin-stat-label">Fomba fandoavam-bola</span>
+        </div>
+      </div>
+      <p class="admin-note">
+        Ity sehatra Admin ity dia mitahiry ny tahirin-kevitrao eto amin'ny navigateur ampiasainao (localStorage). Raha mamafa ny "cache/data" ny navigateur na miova appareil ianao dia very ny fanovana — avero ento (export) matetika raha azo atao.
+      </p>
+
+      <!-- ---- Sokajy (categories / containers) ---- -->
+      <div class="admin-block">
+        <p class="admin-block-title"><i class="fa-solid fa-layer-group"></i> Sokajy (Containers)</p>
+        <p class="admin-block-sub">Ireto ny sokajy efa misy. Afaka manampy sokajy vaovao ianao (ohatra: "TSENA", "TOBILA", sns.) raha mila toerana hafa ho an'ny votoaty tsy mifanaraka amin'ireto efa misy.</p>
+        <div class="admin-cat-chip-list" id="adminCatChipList"></div>
+        <form id="adminCatForm" class="admin-form-grid cols-2">
+          <div class="admin-field">
+            <label for="catLabelInput">Anaran'ny sokajy vaovao</label>
+            <input type="text" id="catLabelInput" placeholder="Ohatra: TSENA" required>
+          </div>
+          <div class="admin-field">
+            <label for="catIconInput">Icon (Font Awesome class)</label>
+            <input type="text" id="catIconInput" placeholder="Ohatra: fa-store" value="fa-folder">
+          </div>
+          <div class="admin-field admin-field-check" style="grid-column: 1 / -1;">
+            <input type="checkbox" id="catHasLevelsInput">
+            <label for="catHasLevelsInput" style="text-transform:none; font-weight:600;">Manana ambaratonga (Presco, T1, 6ème, sns.) toy ny FIANARANA</label>
+          </div>
+          <div class="admin-form-actions" style="grid-column: 1 / -1;">
+            <button type="submit" class="admin-btn"><i class="fa-solid fa-plus"></i> Ampidino ny sokajy</button>
+          </div>
+          <p class="admin-form-msg" id="catFormMsg" style="grid-column: 1 / -1;"></p>
+        </form>
+      </div>
+
+      <!-- ---- Payment & WhatsApp numbers ---- -->
+      <div class="admin-block">
+        <p class="admin-block-title"><i class="fa-solid fa-phone"></i> Laharana fandoavam-bola sy WhatsApp</p>
+        <p class="admin-block-sub">Ovay eto ny laharana Mvola, Orange Money, Airtel Money ary ny laharana WhatsApp handraisana ny porofon'ny fandoavam-bola.</p>
+        <form id="settingsForm">
+          <div class="admin-form-grid cols-2">
+            <div class="admin-field">
+              <label for="mvolaNumberInput">Laharana Mvola</label>
+              <input type="text" id="mvolaNumberInput" placeholder="Ohatra: 034 00 000 00" required>
+            </div>
+            <div class="admin-field">
+              <label for="orangeNumberInput">Laharana Orange Money</label>
+              <input type="text" id="orangeNumberInput" placeholder="Ohatra: 032 00 000 00" required>
+            </div>
+            <div class="admin-field">
+              <label for="airtelNumberInput">Laharana Airtel Money</label>
+              <input type="text" id="airtelNumberInput" placeholder="Ohatra: 033 00 000 00" required>
+            </div>
+            <div class="admin-field">
+              <label for="whatsappNumberInput">Laharana WhatsApp (miaraka amin'ny indicatif fanjakana, tsy misy + na 0 eo alohany)</label>
+              <input type="text" id="whatsappNumberInput" placeholder="Ohatra: 261340000000" required>
+            </div>
+          </div>
+          <div class="admin-form-actions">
+            <button type="submit" class="admin-btn"><i class="fa-solid fa-floppy-disk"></i> Tehirizo ireo laharana</button>
+          </div>
+          <p class="admin-form-msg" id="settingsFormMsg"></p>
+        </form>
+      </div>
+
+      <!-- ---- Add / Edit product ---- -->
+      <div class="admin-block">
+        <p class="admin-block-title"><i class="fa-solid fa-file-circle-plus"></i> Ampidiro na Ovay ny PDF</p>
+        <p class="admin-block-sub">Fenoy ireto lay mba hampidirana rakitra PDF vaovao, na hisafidianana rakitra iray hoe eo ambany "Lisitry ny vokatra" hanovana azy.</p>
+        <form id="productForm">
+          <input type="hidden" id="productIdInput" value="">
+          <div class="admin-form-grid cols-2">
+            <div class="admin-field">
+              <label for="prodCategoryInput">Sokajy</label>
+              <select id="prodCategoryInput" required></select>
+            </div>
+            <div class="admin-field" id="prodLevelField">
+              <label for="prodLevelInput">Ambaratonga</label>
+              <select id="prodLevelInput"></select>
+            </div>
+            <div class="admin-field" style="grid-column: 1 / -1;">
+              <label for="prodLabelInput">Anaran'ny PDF</label>
+              <input type="text" id="prodLabelInput" placeholder="Ohatra: Modely CV" required>
+            </div>
+            <div class="admin-field" style="grid-column: 1 / -1;">
+              <label for="prodDescInput">Famaritana fohy</label>
+              <textarea id="prodDescInput" placeholder="Famaritana fohy momba ilay PDF..."></textarea>
+            </div>
+            <div class="admin-field">
+              <label for="prodPriceInput">Vidiny (Ar) — 7000 hatramin'ny 10 000</label>
+              <input type="number" id="prodPriceInput" min="7000" max="10000" step="500" placeholder="8000" required>
+            </div>
+            <div class="admin-field">
+              <label for="prodIconInput">Icon (Font Awesome class)</label>
+              <input type="text" id="prodIconInput" placeholder="Ohatra: fa-file-lines" value="fa-file-lines">
+            </div>
+            <div class="admin-field" style="grid-column: 1 / -1;">
+              <label for="prodCoverInput">Lien sary cover (URL sary, tsy voatery)</label>
+              <input type="url" id="prodCoverInput" placeholder="https://...jpg / .png">
+            </div>
+            <div class="admin-field" style="grid-column: 1 / -1;">
+              <label for="prodLinkInput">Lien PDF (Google Drive / Google Sheets / hafa)</label>
+              <input type="url" id="prodLinkInput" placeholder="https://drive.google.com/...">
+            </div>
+          </div>
+          <div class="admin-form-actions">
+            <button type="submit" class="admin-btn"><i class="fa-solid fa-floppy-disk"></i> <span id="productSubmitLabel">Ampidino</span></button>
+            <button type="button" id="productResetBtn" class="admin-btn ghost"><i class="fa-solid fa-rotate-left"></i> Foano</button>
+          </div>
+          <p class="admin-form-msg" id="productFormMsg"></p>
+        </form>
+      </div>
+
+      <!-- ---- Google Sheets CSV import ---- -->
+      <div class="admin-block">
+        <p class="admin-block-title"><i class="fa-solid fa-file-csv"></i> Fampidirana avy amin'ny Google Sheets (CSV)</p>
+        <p class="admin-block-sub">
+          Ao amin'ny Google Sheets: <b>Fichier → Partager → Publier sur le Web → CSV</b>, dia apetaho eto ilay lien CSV azo avy eo.
+          Ny tsanganana ao amin'ny Sheet dia tsy maintsy mifanaraka amin'ity filaharana ity: <code>sokajy, ambaratonga, anarana, famaritana, vidiny, icon, sary, lien</code>
+          (ny "ambaratonga, icon, sary, lien" dia azo avela banga).
+        </p>
+        <div class="admin-import-row">
+          <div class="admin-field">
+            <label for="sheetUrlInput">Lien CSV (Publish to web)</label>
+            <input type="url" id="sheetUrlInput" placeholder="https://docs.google.com/.../pub?output=csv">
+          </div>
+          <button type="button" id="sheetImportBtn" class="admin-btn"><i class="fa-solid fa-cloud-arrow-down"></i> Alaina</button>
+        </div>
+        <p class="admin-form-msg" id="sheetImportMsg"></p>
+      </div>
+
+      <!-- ---- Product list ---- -->
+      <div class="admin-block">
+        <p class="admin-block-title"><i class="fa-solid fa-list"></i> Lisitry ny vokatra</p>
+        <p class="admin-block-sub">Tsindrio ny <i class="fa-solid fa-pen"></i> mba hanovana, na ny <i class="fa-solid fa-trash"></i> mba hamafana.</p>
+        <div class="admin-filter-row">
+          <select id="adminFilterCategory"></select>
+        </div>
+        <div class="admin-product-list" id="adminProductList"></div>
+      </div>
+
+      <!-- ---- Backup / restore ---- -->
+      <div class="admin-block">
+        <p class="admin-block-title"><i class="fa-solid fa-box-archive"></i> Fitahirizana (Export / Import)</p>
+        <p class="admin-block-sub">Alaivo ho fichier JSON ny tahirin-kevitrao mba tsy ho very, na avereno ampidirina fichier efa nalaina taloha.</p>
+        <div class="admin-form-actions">
+          <button type="button" id="exportDataBtn" class="admin-btn ghost"><i class="fa-solid fa-download"></i> Export JSON</button>
+          <label class="admin-btn ghost" style="cursor:pointer;">
+            <i class="fa-solid fa-upload"></i> Import JSON
+            <input type="file" id="importDataInput" accept="application/json" style="display:none;">
+          </label>
+          <button type="button" id="resetDataBtn" class="admin-btn danger"><i class="fa-solid fa-triangle-exclamation"></i> Averina ho tany am-boalohany</button>
+        </div>
+        <p class="admin-form-msg" id="backupMsg"></p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <p class="site-footer-copyright"><b>PRO-DIGIT-26</b> <span id="footerCopyrightText">© 2026 — Zon'ny mpamorona voaro.</span></p>
+      <p class="site-footer-protect">
+        <i class="fa-solid fa-lock" style="font-size:9px;"></i>
+        <span id="footerProtectText">Fandikan-dalàna ny fanaparitahana na famerenana amidy ireo rakitra PDF eto ambony.</span>
+      </p>
+    </div>
+  </footer>
+
+<script>
+(function () {
+  // ---- Admin password is stored as a SHA-256 hash, not plain text ----
+  // (so it can't just be read straight out of "view source" like before).
+  // Real password: onja26 — change ADMIN_PASSWORD_HASH if you ever change it.
+  var ADMIN_PASSWORD_HASH = '4580adf268b82f4f56e552aabd063600ea07b522d92002591a267105b27a3a48';
+
+  async function sha256Hex(text) {
+    var enc = new TextEncoder().encode(text);
+    var buf = await crypto.subtle.digest('SHA-256', enc);
+    return Array.from(new Uint8Array(buf)).map(function (b) { return b.toString(16).padStart(2, '0'); }).join('');
+  }
+
+  var LEVELS = ['Presco','T1','T2','T3','T4','T5','6ème','5ème','4ème','3ème','Seconde','Première','Terminale'];
+  var STORAGE_KEY = 'pd26_catalogue_v1';
+  var LANG_STORAGE_KEY = 'pd26_lang_v1';
+
+  // ==================== TRANSLATIONS ====================
+  var TRANSLATIONS = {
+    mg: {
+      guideBtn: 'GUIDE PRATIQUE',
+      heroEyebrow: "BOUTIKA PDF NOMERIKA VOALOHANY ETO MADAGASIKARA",
+      heroDesc: "Karazana PDF maro ho an'ny lafiny samihafa amin'ny fiainana. Vidiana amin'ny MVola, Orange Money, sy Airtel Money.",
+      catalogueBtn: 'JEREO NY CATALOGUE',
+      catalogueIntro: "Ireo PDF ao amin'ny",
+      catalogueNote: "* Placeholder ireto — soloy amin'ny anarana, sary, ary vidiny tena izy rehefa vonona ny votoaty.",
+      emptyCategory: "Mbola tsy misy PDF ao amin'ity sokajy/ambaratonga ity.",
+      productHoverCta: 'Vidio ny PDF',
+      productPriceLabel: 'Vidiny',
+      productBuyBtn: 'Vidio',
+      modalTitleAdmin: 'Espace Administration',
+      modalSubAdmin: 'Ampidiro ny tenimiafinao (Password):',
+      modalCancel: 'Hanafoana',
+      modalConfirm: 'Hiditra',
+      buyModalPricePrefix: 'Vidiny:',
+      payInstruction1: "Kopia ny laharana mifanaraka amin'ny fomba fandoavam-bola tianao.",
+      payInstruction2: "Alefaso ny vola araka ny vidiny voalaza etsy ambony.",
+      payInstruction3: "Tsindrio ny bokotra WhatsApp etsy ambany ka alefaso ny \"capture\" porofon'ny fandoavana mba handraisanao ny PDF avy hatrany.",
+      whatsappBtn: "Alefaso ny porofo amin'ny WhatsApp",
+      payPlaceholderNote: "* Laharana placeholder ireto — soloy amin'ny tena laharanao rehefa vonona.",
+      copyBtn: 'Kopia',
+      copiedBtn: 'Voakopia ✓',
+      footerCopyright: "© 2026 — Zon'ny mpamorona voaro.",
+      footerProtect: "Fandikan-dalàna ny fanaparitahana na famerenana amidy ireo rakitra PDF eto ambony.",
+      catASA: 'ASA', catFIANARANA: 'FIANARANA', catFAMORONANA_ASA: 'FAMORONANA ASA', catHAFA: 'HAFA',
+      whatsappMsgPrefix: "Miarahaba! Efa nandoa ny vidin'ny",
+      whatsappMsgSuffix: "aho, ity ny porofo:"
+    },
+    fr: {
+      guideBtn: 'GUIDE PRATIQUE',
+      heroEyebrow: "LA PREMIÈRE BOUTIQUE PDF NUMÉRIQUE À MADAGASCAR",
+      heroDesc: "Une large gamme de PDF pour différents aspects de la vie. Paiement par MVola, Orange Money ou Airtel Money.",
+      catalogueBtn: 'VOIR LE CATALOGUE',
+      catalogueIntro: "Les PDF disponibles dans",
+      catalogueNote: "* Ceci sont des exemples — remplacez-les par les vrais noms, images et prix une fois le contenu prêt.",
+      emptyCategory: "Aucun PDF disponible dans cette catégorie/niveau pour le moment.",
+      productHoverCta: 'Acheter le PDF',
+      productPriceLabel: 'Prix',
+      productBuyBtn: 'Acheter',
+      modalTitleAdmin: 'Espace Administration',
+      modalSubAdmin: 'Entrez votre mot de passe :',
+      modalCancel: 'Annuler',
+      modalConfirm: 'Entrer',
+      buyModalPricePrefix: 'Prix :',
+      payInstruction1: "Copiez le numéro correspondant au moyen de paiement de votre choix.",
+      payInstruction2: "Envoyez le montant indiqué ci-dessus.",
+      payInstruction3: "Cliquez sur le bouton WhatsApp ci-dessous et envoyez la capture d'écran de la preuve de paiement pour recevoir le PDF immédiatement.",
+      whatsappBtn: "Envoyer la preuve sur WhatsApp",
+      payPlaceholderNote: "* Numéros provisoires — à remplacer par vos vrais numéros.",
+      copyBtn: 'Copier',
+      copiedBtn: 'Copié ✓',
+      footerCopyright: "© 2026 — Tous droits réservés.",
+      footerProtect: "La distribution ou la revente non autorisée de ces fichiers PDF est interdite.",
+      catASA: 'TRAVAIL', catFIANARANA: 'ÉTUDES', catFAMORONANA_ASA: 'ENTREPRENEURIAT', catHAFA: 'AUTRES',
+      whatsappMsgPrefix: "Bonjour ! J'ai payé le prix de",
+      whatsappMsgSuffix: ", voici la preuve :"
+    },
+    en: {
+      guideBtn: 'PRACTICAL GUIDE',
+      heroEyebrow: "MADAGASCAR'S FIRST DIGITAL PDF STORE",
+      heroDesc: "A wide range of PDFs for different aspects of life. Pay with MVola, Orange Money, or Airtel Money.",
+      catalogueBtn: 'VIEW CATALOGUE',
+      catalogueIntro: "PDFs available in",
+      catalogueNote: "* These are placeholders — replace with the real names, images, and prices once your content is ready.",
+      emptyCategory: "No PDFs available in this category/level yet.",
+      productHoverCta: 'Buy this PDF',
+      productPriceLabel: 'Price',
+      productBuyBtn: 'Buy',
+      modalTitleAdmin: 'Admin Area',
+      modalSubAdmin: 'Enter your password:',
+      modalCancel: 'Cancel',
+      modalConfirm: 'Log in',
+      buyModalPricePrefix: 'Price:',
+      payInstruction1: "Copy the number for your preferred payment method.",
+      payInstruction2: "Send the amount shown above.",
+      payInstruction3: "Tap the WhatsApp button below and send a screenshot of your payment proof to receive the PDF right away.",
+      whatsappBtn: "Send proof on WhatsApp",
+      payPlaceholderNote: "* These are placeholder numbers — replace them with your real numbers.",
+      copyBtn: 'Copy',
+      copiedBtn: 'Copied ✓',
+      footerCopyright: "© 2026 — All rights reserved.",
+      footerProtect: "Unauthorized distribution or resale of these PDF files is prohibited.",
+      catASA: 'WORK', catFIANARANA: 'STUDIES', catFAMORONANA_ASA: 'ENTREPRENEURSHIP', catHAFA: 'OTHER',
+      whatsappMsgPrefix: "Hello! I have paid for",
+      whatsappMsgSuffix: ", here is the proof:"
+    }
+  };
+  var DEFAULT_CAT_LABELS = {
+    ASA: { mg: 'ASA', fr: 'TRAVAIL', en: 'WORK' },
+    FIANARANA: { mg: 'FIANARANA', fr: 'ÉTUDES', en: 'STUDIES' },
+    FAMORONANA_ASA: { mg: 'FAMORONANA ASA', fr: 'ENTREPRENEURIAT', en: 'ENTREPRENEURSHIP' },
+    HAFA: { mg: 'HAFA', fr: 'AUTRES', en: 'OTHER' }
+  };
+  var currentLang = 'mg';
+  try {
+    var savedLang = localStorage.getItem(LANG_STORAGE_KEY);
+    if (savedLang && TRANSLATIONS[savedLang]) currentLang = savedLang;
+  } catch (err) {}
+  function T(key) {
+    return (TRANSLATIONS[currentLang] && TRANSLATIONS[currentLang][key]) || TRANSLATIONS.mg[key] || '';
+  }
+  function categoryLabel(key, storedLabel) {
+    var variants = DEFAULT_CAT_LABELS[key];
+    if (!variants) return storedLabel;
+    var isDefault = Object.keys(variants).some(function (l) { return variants[l] === storedLabel; });
+    return isDefault ? variants[currentLang] : storedLabel;
+  }
+  var idCounter = 1;
+  function nextId() { return 'p' + Date.now().toString(36) + (idCounter++).toString(36); }
+
+  // ==================== DEFAULT CATALOGUE ====================
+  var DEFAULT_DATA = {
+    categoryOrder: ['ASA', 'FIANARANA', 'FAMORONANA_ASA', 'HAFA'],
+    categories: {
+      ASA: {
+        label: 'ASA',
+        icon: 'fa-briefcase',
+        hasLevels: false,
+        items: [
+          { id: 'd1', label: 'Modely CV', icon: 'fa-id-card', desc: "Endrika CV maoderina, azo ovaina mora, vonona hasiana ny mombamombanao.", price: '8 000 Ar', cover: '', link: '' },
+          { id: 'd2', label: 'Taratasy fangatahana asa', icon: 'fa-file-signature', desc: "Modely taratasy fangatahana asa manaraka ny fenitra ampiasaina ankehitriny.", price: '8 000 Ar', cover: '', link: '' },
+          { id: 'd3', label: 'Torolalana fikarohana asa', icon: 'fa-magnifying-glass', desc: "Torolalana feno hikarohana asa haingana sy hahazoana valiny avy amin'ny mpampiasa.", price: '8 000 Ar', cover: '', link: '' },
+          { id: 'd4', label: 'Modely fifanarahana asa', icon: 'fa-file-contract', desc: "Endrika fifanarahana asa (CDI/CDD) azo ovaina araka ny filanao.", price: '8 000 Ar', cover: '', link: '' },
+          { id: 'd5', label: 'Torolalana entretien', icon: 'fa-comments', desc: "Fanontaniana matetika apetraka sy tari-dalana hivoahana amim-pahombiazana amin'ny entretien.", price: '8 000 Ar', cover: '', link: '' }
+        ]
+      },
+      FIANARANA: {
+        label: 'FIANARANA',
+        icon: 'fa-graduation-cap',
+        hasLevels: true,
+        items: [
+          { id: 'd6', label: 'Cours', icon: 'fa-book-open', desc: "Fampianarana feno amin'ny lesona iray, voavaha tsara ary mora azo.", price: '7 000 Ar', cover: '', link: '' },
+          { id: 'd7', label: 'Fiches de résumé', icon: 'fa-file-lines', desc: "Famintinana fohy sy mazava ny votoaty lehibe amin'ny lesona.", price: '7 000 Ar', cover: '', link: '' },
+          { id: 'd8', label: 'Exercices', icon: 'fa-pen', desc: "Fanazaran-tena maro samihafa mba hanamafisana ny fahaizana.", price: '7 000 Ar', cover: '', link: '' },
+          { id: 'd9', label: 'Devoirs', icon: 'fa-clipboard-list', desc: "Devoir voavaha tsikelikely, azo ampiasaina ho fanazaran-tena.", price: '7 000 Ar', cover: '', link: '' },
+          { id: 'd10', label: 'Préparation examen (Q&R)', icon: 'fa-circle-question', desc: "Fanontaniana sy valiny mety hivoaka amin'ny fanadinana.", price: '7 000 Ar', cover: '', link: '' }
+        ]
+      },
+      FAMORONANA_ASA: {
+        label: 'FAMORONANA ASA',
+        icon: 'fa-rocket',
+        hasLevels: false,
+        items: [
+          { id: 'd11', label: 'Business plan', icon: 'fa-chart-line', desc: "Endrika business plan feno, azo entina any amin'ny banky na mpampiasa vola.", price: '10 000 Ar', cover: '', link: '' },
+          { id: 'd12', label: 'Torolalana fananganana orinasa', icon: 'fa-building', desc: "Dingana rehetra tokony harahina hananganana orinasa eto Madagasikara.", price: '10 000 Ar', cover: '', link: '' },
+          { id: 'd13', label: 'Modely statuts', icon: 'fa-file-contract', desc: "Endrika statuts orinasa (SARL/EI) azo ovaina araka ny filanao.", price: '10 000 Ar', cover: '', link: '' },
+          { id: 'd14', label: 'Étude de marché', icon: 'fa-magnifying-glass-chart', desc: "Torolalana hanaovana famakafakana tsena mialoha ny fanombohana asa.", price: '10 000 Ar', cover: '', link: '' },
+          { id: 'd15', label: 'Torolalana famatsiam-bola', icon: 'fa-sack-dollar', desc: "Toerana sy fomba hitadiavana famatsiam-bola ho an'ny tetikasa.", price: '10 000 Ar', cover: '', link: '' }
+        ]
+      },
+      HAFA: {
+        label: 'HAFA',
+        icon: 'fa-ellipsis',
+        hasLevels: false,
+        items: [
+          { id: 'd16', label: 'Modely taratasy isan-karazany', icon: 'fa-file', desc: "Fitambaran'ny endrika taratasy ilaina amin'ny fiainana andavanandro.", price: '7 500 Ar', cover: '', link: '' },
+          { id: 'd17', label: 'Torolalana ara-panjakana', icon: 'fa-landmark', desc: "Torolalana hanatanterahana raharaha ara-panjakana mahazatra.", price: '7 500 Ar', cover: '', link: '' },
+          { id: 'd18', label: 'Guide pratique', icon: 'fa-book', desc: "Torolalana azo ampiharina avy hatrany amin'ny lohahevitra samihafa.", price: '7 500 Ar', cover: '', link: '' },
+          { id: 'd19', label: 'Modely fanambarana', icon: 'fa-file-pen', desc: "Endrika fanambarana isan-karazany, vonona hasiana ny mombamombanao.", price: '7 500 Ar', cover: '', link: '' },
+          { id: 'd20', label: 'Zavatra hafa', icon: 'fa-layer-group', desc: "Votoaty hafa mety ilainao, fanampiny amin'ny tahirin-kevitra.", price: '7 500 Ar', cover: '', link: '' }
+        ]
+      }
+    },
+    settings: {
+      payMethods: [
+        { key: 'mvola', name: 'Mvola', number: '034 00 000 00' },
+        { key: 'orange', name: 'Orange Money', number: '032 00 000 00' },
+        { key: 'airtel', name: 'Airtel Money', number: '033 00 000 00' }
+      ],
+      whatsappNumber: '261340000000' // placeholder — soloy amin'ny tena laharana WhatsApp
+    }
+  };
+
+  // ==================== DATA LAYER (localStorage) ====================
+  var DATA;
+  function loadData() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        var parsed = JSON.parse(raw);
+        if (parsed && parsed.categories && parsed.categoryOrder) {
+          if (!parsed.settings) {
+            parsed.settings = JSON.parse(JSON.stringify(DEFAULT_DATA.settings));
+          }
+          return parsed;
+        }
+      }
+    } catch (err) {}
+    var cloned = JSON.parse(JSON.stringify(DEFAULT_DATA));
+    return cloned;
+  }
+  function saveData() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(DATA));
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
+  DATA = loadData();
+  saveData();
+
+  var selectedCategory = DATA.categoryOrder.indexOf('FIANARANA') !== -1 ? 'FIANARANA' : DATA.categoryOrder[0];
+  var selectedLevel = LEVELS[0];
+  var clickCount = 0;
+  var lastClickTime = 0;
+
+  var categoryTabsEl = document.getElementById('categoryTabs');
+  var levelTabsEl = document.getElementById('levelTabs');
+  var productGridEl = document.getElementById('productGrid');
+  var levelLabelEl = document.getElementById('levelLabel');
+  var catalogueIconEl = document.getElementById('catalogueIcon');
+  var catalogueLabelEl = document.getElementById('catalogueLabel');
+  var catalogueTitleNameEl = document.getElementById('catalogueTitleName');
+
+  function renderCategoryTabs() {
+    categoryTabsEl.innerHTML = '';
+    DATA.categoryOrder.forEach(function (key) {
+      var cat = DATA.categories[key];
+      if (!cat) return;
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'category-tab' + (key === selectedCategory ? ' active' : '');
+      btn.innerHTML = '<i class="fa-solid ' + cat.icon + '"></i> ' + categoryLabel(key, cat.label);
+      btn.addEventListener('click', function () {
+        selectCategory(key);
+      });
+      categoryTabsEl.appendChild(btn);
+    });
+  }
+
+  function selectCategory(key) {
+    if (!DATA.categories[key]) return;
+    selectedCategory = key;
+    var cat = DATA.categories[key];
+    catalogueIconEl.className = 'fa-solid ' + cat.icon;
+    catalogueLabelEl.textContent = categoryLabel(key, cat.label);
+    catalogueTitleNameEl.textContent = categoryLabel(key, cat.label);
+    levelLabelEl.textContent = cat.hasLevels ? ' — ' + selectedLevel : '';
+    levelTabsEl.style.display = cat.hasLevels ? 'flex' : 'none';
+    renderCategoryTabs();
+    renderLevelTabs();
+    renderProductGrid();
+  }
+
+  function renderLevelTabs() {
+    levelTabsEl.innerHTML = '';
+    if (!DATA.categories[selectedCategory] || !DATA.categories[selectedCategory].hasLevels) return;
+    LEVELS.forEach(function (level) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'level-tab' + (level === selectedLevel ? ' active' : '');
+      btn.textContent = level;
+      btn.addEventListener('click', function () {
+        selectedLevel = level;
+        levelLabelEl.textContent = ' — ' + selectedLevel;
+        renderLevelTabs();
+        renderProductGrid();
+      });
+      levelTabsEl.appendChild(btn);
+    });
+  }
+
+  function renderProductGrid() {
+    productGridEl.innerHTML = '';
+    var cat = DATA.categories[selectedCategory];
+    if (!cat) return;
+    var catLabel = categoryLabel(selectedCategory, cat.label);
+    var items = cat.items;
+    if (cat.hasLevels) {
+      items = items.filter(function (it) { return !it.level || it.level === selectedLevel; });
+    }
+    if (items.length === 0) {
+      var empty = document.createElement('p');
+      empty.className = 'catalogue-note';
+      empty.style.gridColumn = '1 / -1';
+      empty.textContent = T('emptyCategory');
+      productGridEl.appendChild(empty);
+      return;
+    }
+    items.forEach(function (item) {
+      var card = document.createElement('div');
+      card.className = 'product-card';
+      var thumbInner = item.cover
+        ? '<img src="' + item.cover + '" alt="' + item.label + '" style="width:100%;height:100%;object-fit:cover;">'
+        : '<i class="fa-solid ' + (item.icon || 'fa-file-lines') + '"></i>';
+      card.innerHTML =
+        '<div class="product-thumb">' + thumbInner +
+        '<div class="product-hover-cta"><i class="fa-solid fa-eye"></i> ' + T('productHoverCta') + '</div></div>' +
+        '<span class="product-pill">' + catLabel + '</span>' +
+        '<p class="product-name">' + item.label + '</p>' +
+        '<p class="product-desc">' + item.desc + '</p>' +
+        '<div class="product-divider"></div>' +
+        '<p class="product-vidiny-label">' + T('productPriceLabel') + '</p>' +
+        '<p class="product-price">' + item.price + '</p>' +
+        '<button class="product-buy" type="button"><i class="fa-solid fa-bag-shopping"></i> ' + T('productBuyBtn') + '</button>';
+
+      var openBuy = function () { openBuyModal(item); };
+      card.querySelector('.product-hover-cta').addEventListener('click', openBuy);
+      card.querySelector('.product-buy').addEventListener('click', openBuy);
+      productGridEl.appendChild(card);
+    });
+  }
+
+  selectCategory(selectedCategory);
+
+  // ---- Hero chips: jump straight to their catalogue category ----
+  document.querySelectorAll('.chip[data-category]').forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      var key = chip.getAttribute('data-category');
+      if (DATA.categories[key]) {
+        selectCategory(key);
+        document.getElementById('catalogue').scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+
+  // ---- Anti-piracy: block right-click / drag on product thumbnails ----
+  productGridEl.addEventListener('contextmenu', function (e) {
+    if (e.target.closest('.product-thumb')) e.preventDefault();
+  });
+  productGridEl.addEventListener('dragstart', function (e) {
+    if (e.target.closest('.product-thumb')) e.preventDefault();
+  });
+
+  // ==================== BUY MODAL ====================
+  var buyModalOverlay = document.getElementById('buyModalOverlay');
+  var buyModalTitle = document.getElementById('buyModalTitle');
+  var buyModalPrice = document.getElementById('buyModalPrice');
+  var payMethodsEl = document.getElementById('payMethods');
+  var buyWhatsappBtn = document.getElementById('buyWhatsappBtn');
+  var buyModalCloseBtn = document.getElementById('buyModalCloseBtn');
+
+  function renderPayMethods() {
+    payMethodsEl.innerHTML = '';
+    DATA.settings.payMethods.forEach(function (pm) {
+      var row = document.createElement('div');
+      row.className = 'pay-row';
+      row.innerHTML =
+        '<div class="pay-row-info">' +
+          '<span class="pay-dot ' + pm.key + '"></span>' +
+          '<span class="pay-name">' + pm.name + '</span>' +
+          '<span class="pay-number">' + pm.number + '</span>' +
+        '</div>' +
+        '<button type="button" class="pay-copy-btn">' + T('copyBtn') + '</button>';
+      var copyBtn = row.querySelector('.pay-copy-btn');
+      copyBtn.addEventListener('click', function () {
+        var text = pm.number;
+        var done = function () {
+          copyBtn.textContent = T('copiedBtn');
+          copyBtn.classList.add('copied');
+          setTimeout(function () {
+            copyBtn.textContent = T('copyBtn');
+            copyBtn.classList.remove('copied');
+          }, 1600);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done).catch(function () { fallbackCopy(text, done); });
+        } else {
+          fallbackCopy(text, done);
+        }
+      });
+      payMethodsEl.appendChild(row);
+    });
+  }
+  function fallbackCopy(text, done) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); } catch (err) {}
+    document.body.removeChild(ta);
+    done();
+  }
+  renderPayMethods();
+
+  function openBuyModal(item) {
+    buyModalTitle.textContent = item.label;
+    buyModalPrice.textContent = T('buyModalPricePrefix') + ' ' + item.price;
+    var msg = T('whatsappMsgPrefix') + " \"" + item.label + "\" (" + item.price + ") " + T('whatsappMsgSuffix');
+    buyWhatsappBtn.href = 'https://wa.me/' + DATA.settings.whatsappNumber + '?text=' + encodeURIComponent(msg);
+    buyModalOverlay.hidden = false;
+  }
+  function closeBuyModal() { buyModalOverlay.hidden = true; }
+  buyModalCloseBtn.addEventListener('click', closeBuyModal);
+  buyModalOverlay.addEventListener('click', function (e) {
+    if (e.target === buyModalOverlay) closeBuyModal();
+  });
+
+  // ==================== ADMIN LOGIN ====================
+  var logoBtn = document.getElementById('logoBtn');
+  var modalOverlay = document.getElementById('modalOverlay');
+  var modalCard = document.getElementById('modalCard');
+  var passwordInput = document.getElementById('passwordInput');
+  var modalFeedback = document.getElementById('modalFeedback');
+  var modalCloseBtn = document.getElementById('modalCloseBtn');
+  var modalCancelBtn = document.getElementById('modalCancelBtn');
+  var modalConfirmBtn = modalCard.querySelector('.modal-confirm');
+  var adminPanel = document.getElementById('adminPanel');
+  var adminExitBtn = document.getElementById('adminExitBtn');
+
+  logoBtn.addEventListener('click', function () {
+    var now = Date.now();
+    if (now - lastClickTime > 3000) {
+      clickCount = 1;
+    } else {
+      clickCount += 1;
+      if (clickCount === 5) {
+        openModal();
+        clickCount = 0;
+      }
+    }
+    lastClickTime = now;
+  });
+
+  function openModal() {
+    passwordInput.value = '';
+    modalFeedback.hidden = true;
+    modalFeedback.className = 'modal-feedback';
+    modalOverlay.hidden = false;
+    setTimeout(function () { passwordInput.focus(); }, 50);
+  }
+  function closeModal() {
+    modalOverlay.hidden = true;
+  }
+
+  modalOverlay.addEventListener('click', function (e) {
+    if (e.target === modalOverlay) closeModal();
+  });
+  modalCloseBtn.addEventListener('click', closeModal);
+  modalCancelBtn.addEventListener('click', closeModal);
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      if (!modalOverlay.hidden) closeModal();
+      if (!buyModalOverlay.hidden) closeBuyModal();
+    }
+  });
+
+  function openAdminPanel() {
+    adminPanel.hidden = false;
+    document.body.classList.add('is-admin');
+    refreshAdminUI();
+    adminPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  adminExitBtn.addEventListener('click', function () {
+    adminPanel.hidden = true;
+    document.body.classList.remove('is-admin');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  modalCard.addEventListener('submit', function (e) {
+    e.preventDefault();
+    modalConfirmBtn.disabled = true;
+    var typed = passwordInput.value;
+
+    sha256Hex(typed).then(function (hash) {
+      modalConfirmBtn.disabled = false;
+      if (hash === ADMIN_PASSWORD_HASH) {
+        modalFeedback.textContent = 'Fahombiazana — tafiditra ho Admin ianao!';
+        modalFeedback.className = 'modal-feedback success';
+        modalFeedback.hidden = false;
+        setTimeout(function () {
+          closeModal();
+          openAdminPanel();
+        }, 900);
+      } else {
+        modalFeedback.textContent = 'Diso ny tenimiafina napiditrao.';
+        modalFeedback.className = 'modal-feedback error';
+        modalFeedback.hidden = false;
+      }
+    }).catch(function () {
+      modalConfirmBtn.disabled = false;
+      modalFeedback.textContent = 'Nisy olana teknika — andramo indray.';
+      modalFeedback.className = 'modal-feedback error';
+      modalFeedback.hidden = false;
+    });
+  });
+
+  // ==================== ADMIN CRUD ====================
+  var statTotalProducts = document.getElementById('statTotalProducts');
+  var statTotalCategories = document.getElementById('statTotalCategories');
+
+  var settingsForm = document.getElementById('settingsForm');
+  var mvolaNumberInput = document.getElementById('mvolaNumberInput');
+  var orangeNumberInput = document.getElementById('orangeNumberInput');
+  var airtelNumberInput = document.getElementById('airtelNumberInput');
+  var whatsappNumberInput = document.getElementById('whatsappNumberInput');
+  var settingsFormMsg = document.getElementById('settingsFormMsg');
+
+  function populateSettingsForm() {
+    function findNumber(key) {
+      var pm = DATA.settings.payMethods.find(function (p) { return p.key === key; });
+      return pm ? pm.number : '';
+    }
+    mvolaNumberInput.value = findNumber('mvola');
+    orangeNumberInput.value = findNumber('orange');
+    airtelNumberInput.value = findNumber('airtel');
+    whatsappNumberInput.value = DATA.settings.whatsappNumber || '';
+  }
+
+  settingsForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    function setNumber(key, value) {
+      var pm = DATA.settings.payMethods.find(function (p) { return p.key === key; });
+      if (pm) pm.number = value.trim();
+    }
+    setNumber('mvola', mvolaNumberInput.value);
+    setNumber('orange', orangeNumberInput.value);
+    setNumber('airtel', airtelNumberInput.value);
+    DATA.settings.whatsappNumber = whatsappNumberInput.value.trim().replace(/[^0-9]/g, '');
+    saveData();
+    renderPayMethods();
+    showMsg(settingsFormMsg, 'Voatahiry ny laharana!', false);
+  });
+
+  var adminCatChipList = document.getElementById('adminCatChipList');
+  var adminCatForm = document.getElementById('adminCatForm');
+  var catLabelInput = document.getElementById('catLabelInput');
+  var catIconInput = document.getElementById('catIconInput');
+  var catHasLevelsInput = document.getElementById('catHasLevelsInput');
+  var catFormMsg = document.getElementById('catFormMsg');
+
+  var productForm = document.getElementById('productForm');
+  var productIdInput = document.getElementById('productIdInput');
+  var prodCategoryInput = document.getElementById('prodCategoryInput');
+  var prodLevelField = document.getElementById('prodLevelField');
+  var prodLevelInput = document.getElementById('prodLevelInput');
+  var prodLabelInput = document.getElementById('prodLabelInput');
+  var prodDescInput = document.getElementById('prodDescInput');
+  var prodPriceInput = document.getElementById('prodPriceInput');
+  var prodIconInput = document.getElementById('prodIconInput');
+  var prodCoverInput = document.getElementById('prodCoverInput');
+  var prodLinkInput = document.getElementById('prodLinkInput');
+  var productSubmitLabel = document.getElementById('productSubmitLabel');
+  var productResetBtn = document.getElementById('productResetBtn');
+  var productFormMsg = document.getElementById('productFormMsg');
+
+  var adminFilterCategory = document.getElementById('adminFilterCategory');
+  var adminProductList = document.getElementById('adminProductList');
+
+  var sheetUrlInput = document.getElementById('sheetUrlInput');
+  var sheetImportBtn = document.getElementById('sheetImportBtn');
+  var sheetImportMsg = document.getElementById('sheetImportMsg');
+
+  var exportDataBtn = document.getElementById('exportDataBtn');
+  var importDataInput = document.getElementById('importDataInput');
+  var resetDataBtn = document.getElementById('resetDataBtn');
+  var backupMsg = document.getElementById('backupMsg');
+
+  function slugify(label) {
+    var base = label.toUpperCase().trim().replace(/[^A-Z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+    if (!base) base = 'SOKAJY';
+    var key = base;
+    var i = 2;
+    while (DATA.categories[key]) { key = base + '_' + i; i++; }
+    return key;
+  }
+
+  function showMsg(el, text, isError) {
+    el.textContent = text;
+    el.className = 'admin-form-msg ' + (isError ? 'error' : 'success');
+    if (text) setTimeout(function () { if (el.textContent === text) el.textContent = ''; }, 4000);
+  }
+
+  function refreshStats() {
+    var total = 0;
+    DATA.categoryOrder.forEach(function (key) {
+      if (DATA.categories[key]) total += DATA.categories[key].items.length;
+    });
+    statTotalProducts.textContent = total;
+    statTotalCategories.textContent = DATA.categoryOrder.length;
+  }
+
+  function renderAdminCategoryChips() {
+    adminCatChipList.innerHTML = '';
+    DATA.categoryOrder.forEach(function (key) {
+      var cat = DATA.categories[key];
+      if (!cat) return;
+      var chip = document.createElement('div');
+      chip.className = 'admin-cat-chip';
+      var count = cat.items.length;
+      chip.innerHTML =
+        '<span><i class="fa-solid ' + cat.icon + '"></i> ' + cat.label + ' (' + count + ')' + (cat.hasLevels ? ' · ambaratonga' : '') + '</span>';
+      var delBtn = document.createElement('button');
+      delBtn.type = 'button';
+      delBtn.className = 'admin-icon-btn del';
+      delBtn.title = 'Fafao ity sokajy ity';
+      delBtn.innerHTML = '<i class="fa-solid fa-trash"></i>';
+      delBtn.addEventListener('click', function () {
+        if (count > 0) {
+          alert("Tsy azo fafana ity sokajy ity satria mbola misy vokatra (" + count + ") ao anatiny. Fafao aloha ireo vokatra ao anatiny.");
+          return;
+        }
+        if (!confirm('Hamafa ny sokajy "' + cat.label + '" ve ianao?')) return;
+        delete DATA.categories[key];
+        DATA.categoryOrder = DATA.categoryOrder.filter(function (k) { return k !== key; });
+        saveData();
+        if (selectedCategory === key) selectedCategory = DATA.categoryOrder[0];
+        fullRefresh();
+      });
+      chip.appendChild(delBtn);
+      adminCatChipList.appendChild(chip);
+    });
+  }
+
+  adminCatForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var label = catLabelInput.value.trim();
+    if (!label) return;
+    var icon = (catIconInput.value.trim() || 'fa-folder').replace(/^fa-solid\s+/, '');
+    var key = slugify(label);
+    DATA.categories[key] = { label: label, icon: icon, hasLevels: !!catHasLevelsInput.checked, items: [] };
+    DATA.categoryOrder.push(key);
+    saveData();
+    adminCatForm.reset();
+    showMsg(catFormMsg, 'Voampidina ny sokajy "' + label + '"!', false);
+    fullRefresh();
+  });
+
+  function populateCategorySelects() {
+    [prodCategoryInput, adminFilterCategory].forEach(function (sel) {
+      var isFilter = sel === adminFilterCategory;
+      var prevVal = sel.value;
+      sel.innerHTML = '';
+      if (isFilter) {
+        var optAll = document.createElement('option');
+        optAll.value = '__all__';
+        optAll.textContent = 'Ny sokajy rehetra';
+        sel.appendChild(optAll);
+      }
+      DATA.categoryOrder.forEach(function (key) {
+        var cat = DATA.categories[key];
+        if (!cat) return;
+        var opt = document.createElement('option');
+        opt.value = key;
+        opt.textContent = cat.label;
+        sel.appendChild(opt);
+      });
+      if (prevVal && [].slice.call(sel.options).some(function (o) { return o.value === prevVal; })) {
+        sel.value = prevVal;
+      }
+    });
+    toggleLevelField();
+  }
+
+  function toggleLevelField() {
+    var cat = DATA.categories[prodCategoryInput.value];
+    var hasLevels = cat && cat.hasLevels;
+    prodLevelField.style.display = hasLevels ? 'flex' : 'none';
+    if (hasLevels && prodLevelInput.options.length === 0) {
+      LEVELS.forEach(function (lvl) {
+        var opt = document.createElement('option');
+        opt.value = lvl;
+        opt.textContent = lvl;
+        prodLevelInput.appendChild(opt);
+      });
+    }
+  }
+  prodCategoryInput.addEventListener('change', toggleLevelField);
+
+  function resetProductForm() {
+    productForm.reset();
+    productIdInput.value = '';
+    productSubmitLabel.textContent = 'Ampidino';
+    prodIconInput.value = 'fa-file-lines';
+    toggleLevelField();
+  }
+  productResetBtn.addEventListener('click', resetProductForm);
+
+  productForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var catKey = prodCategoryInput.value;
+    var cat = DATA.categories[catKey];
+    if (!cat) { showMsg(productFormMsg, 'Safidio sokajy aloha.', true); return; }
+
+    var priceNum = parseInt(prodPriceInput.value, 10);
+    if (isNaN(priceNum) || priceNum < 7000 || priceNum > 10000) {
+      showMsg(productFormMsg, "Ny vidiny dia tsy maintsy eo anelanelan'ny 7000 sy 10 000 Ar.", true);
+      return;
+    }
+
+    var item = {
+      id: productIdInput.value || nextId(),
+      label: prodLabelInput.value.trim(),
+      desc: prodDescInput.value.trim(),
+      price: priceNum.toLocaleString('fr-FR').replace(/\u202f|,/g, ' ') + ' Ar',
+      icon: (prodIconInput.value.trim() || 'fa-file-lines').replace(/^fa-solid\s+/, ''),
+      cover: prodCoverInput.value.trim(),
+      link: prodLinkInput.value.trim()
+    };
+    if (cat.hasLevels) item.level = prodLevelInput.value;
+
+    if (productIdInput.value) {
+      // editing: find & replace across all categories (in case category changed)
+      DATA.categoryOrder.forEach(function (key) {
+        DATA.categories[key].items = DATA.categories[key].items.filter(function (it) { return it.id !== item.id; });
+      });
+    }
+    cat.items.push(item);
+    saveData();
+    showMsg(productFormMsg, productIdInput.value ? 'Voaova ny vokatra!' : 'Voampidina ny vokatra!', false);
+    resetProductForm();
+    fullRefresh();
+  });
+
+  function editProduct(catKey, itemId) {
+    var cat = DATA.categories[catKey];
+    var item = cat.items.find(function (it) { return it.id === itemId; });
+    if (!item) return;
+    prodCategoryInput.value = catKey;
+    toggleLevelField();
+    if (cat.hasLevels) prodLevelInput.value = item.level || LEVELS[0];
+    productIdInput.value = item.id;
+    prodLabelInput.value = item.label;
+    prodDescInput.value = item.desc || '';
+    prodPriceInput.value = parseInt(String(item.price).replace(/[^\d]/g, ''), 10) || 7000;
+    prodIconInput.value = item.icon || 'fa-file-lines';
+    prodCoverInput.value = item.cover || '';
+    prodLinkInput.value = item.link || '';
+    productSubmitLabel.textContent = 'Tehirizo ny fanovana';
+    productForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function deleteProduct(catKey, itemId) {
+    var cat = DATA.categories[catKey];
+    if (!cat) return;
+    var item = cat.items.find(function (it) { return it.id === itemId; });
+    if (!item) return;
+    if (!confirm('Hamafa ny "' + item.label + '" ve ianao?')) return;
+    cat.items = cat.items.filter(function (it) { return it.id !== itemId; });
+    saveData();
+    fullRefresh();
+  }
+
+  function renderAdminProductList() {
+    adminProductList.innerHTML = '';
+    var filterKey = adminFilterCategory.value || '__all__';
+    var rows = [];
+    DATA.categoryOrder.forEach(function (key) {
+      if (filterKey !== '__all__' && key !== filterKey) return;
+      var cat = DATA.categories[key];
+      if (!cat) return;
+      cat.items.forEach(function (item) {
+        rows.push({ catKey: key, cat: cat, item: item });
+      });
+    });
+    if (rows.length === 0) {
+      var empty = document.createElement('p');
+      empty.className = 'admin-empty';
+      empty.textContent = "Mbola tsy misy vokatra.";
+      adminProductList.appendChild(empty);
+      return;
+    }
+    rows.forEach(function (row) {
+      var el = document.createElement('div');
+      el.className = 'admin-product-row';
+      var thumbInner = row.item.cover
+        ? '<img src="' + row.item.cover + '" alt="">'
+        : '<i class="fa-solid ' + (row.item.icon || 'fa-file-lines') + '"></i>';
+      el.innerHTML =
+        '<div class="admin-product-thumb">' + thumbInner + '</div>' +
+        '<div class="admin-product-info">' +
+          '<p class="admin-product-name">' + row.item.label + '</p>' +
+          '<p class="admin-product-meta">' + row.cat.label + (row.item.level ? ' · ' + row.item.level : '') + ' · <span class="price">' + row.item.price + '</span></p>' +
+        '</div>' +
+        '<div class="admin-product-actions">' +
+          '<button type="button" class="admin-icon-btn edit-btn" title="Ovay"><i class="fa-solid fa-pen"></i></button>' +
+          '<button type="button" class="admin-icon-btn del del-btn" title="Fafao"><i class="fa-solid fa-trash"></i></button>' +
+        '</div>';
+      el.querySelector('.edit-btn').addEventListener('click', function () { editProduct(row.catKey, row.item.id); });
+      el.querySelector('.del-btn').addEventListener('click', function () { deleteProduct(row.catKey, row.item.id); });
+      adminProductList.appendChild(el);
+    });
+  }
+  adminFilterCategory.addEventListener('change', renderAdminProductList);
+
+  // ---- Google Sheets CSV import ----
+  function parseCsv(text) {
+    var rows = [];
+    var lines = text.replace(/\r\n/g, '\n').split('\n').filter(function (l) { return l.trim().length > 0; });
+    lines.forEach(function (line) {
+      var cells = [];
+      var cur = '';
+      var inQuotes = false;
+      for (var i = 0; i < line.length; i++) {
+        var c = line[i];
+        if (c === '"') {
+          if (inQuotes && line[i + 1] === '"') { cur += '"'; i++; }
+          else { inQuotes = !inQuotes; }
+        } else if (c === ',' && !inQuotes) {
+          cells.push(cur); cur = '';
+        } else {
+          cur += c;
+        }
+      }
+      cells.push(cur);
+      rows.push(cells.map(function (c) { return c.trim(); }));
+    });
+    return rows;
+  }
+
+  sheetImportBtn.addEventListener('click', function () {
+    var url = sheetUrlInput.value.trim();
+    if (!url) { showMsg(sheetImportMsg, 'Apetaho aloha ny lien CSV.', true); return; }
+    sheetImportBtn.disabled = true;
+    showMsg(sheetImportMsg, 'Alaina...', false);
+    fetch(url)
+      .then(function (res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.text();
+      })
+      .then(function (text) {
+        var rows = parseCsv(text);
+        if (rows.length === 0) throw new Error('Banga ny CSV.');
+        var header = rows[0].map(function (h) { return h.toLowerCase(); });
+        var dataRows = rows.slice(1);
+        var added = 0, skipped = 0;
+        dataRows.forEach(function (r) {
+          var get = function (name) {
+            var idx = header.indexOf(name);
+            return idx !== -1 && r[idx] !== undefined ? r[idx].trim() : '';
+          };
+          var sokajyLabel = get('sokajy');
+          var anarana = get('anarana');
+          if (!sokajyLabel || !anarana) { skipped++; return; }
+          var catKey = null;
+          DATA.categoryOrder.forEach(function (key) {
+            if (DATA.categories[key].label.toLowerCase() === sokajyLabel.toLowerCase()) catKey = key;
+          });
+          if (!catKey) {
+            catKey = slugify(sokajyLabel);
+            DATA.categories[catKey] = { label: sokajyLabel, icon: 'fa-folder', hasLevels: !!get('ambaratonga'), items: [] };
+            DATA.categoryOrder.push(catKey);
+          }
+          var priceRaw = get('vidiny').replace(/[^\d]/g, '');
+          var priceNum = parseInt(priceRaw, 10);
+          if (isNaN(priceNum)) priceNum = 8000;
+          if (priceNum < 7000) priceNum = 7000;
+          if (priceNum > 10000) priceNum = 10000;
+          var item = {
+            id: nextId(),
+            label: anarana,
+            desc: get('famaritana'),
+            price: priceNum.toLocaleString('fr-FR').replace(/\u202f|,/g, ' ') + ' Ar',
+            icon: get('icon') || 'fa-file-lines',
+            cover: get('sary'),
+            link: get('lien')
+          };
+          var lvl = get('ambaratonga');
+          if (lvl && DATA.categories[catKey].hasLevels) item.level = lvl;
+          DATA.categories[catKey].items.push(item);
+          added++;
+        });
+        saveData();
+        fullRefresh();
+        showMsg(sheetImportMsg, added + ' vokatra voampidina' + (skipped ? ', ' + skipped + ' tsy nalaina (banga lay)' : '') + '.', false);
+      })
+      .catch(function (err) {
+        showMsg(sheetImportMsg, 'Nisy olana: ' + err.message + '. Ampio hoe efa "Publier sur le Web → CSV" ilay Sheet.', true);
+      })
+      .finally(function () {
+        sheetImportBtn.disabled = false;
+      });
+  });
+
+  // ---- Export / import / reset backup ----
+  exportDataBtn.addEventListener('click', function () {
+    var blob = new Blob([JSON.stringify(DATA, null, 2)], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'pro-digit-26-catalogue.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    showMsg(backupMsg, 'Voa-export ny fichier JSON!', false);
+  });
+
+  importDataInput.addEventListener('change', function () {
+    var file = importDataInput.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function () {
+      try {
+        var parsed = JSON.parse(reader.result);
+        if (!parsed || !parsed.categories || !parsed.categoryOrder) throw new Error('Endrika tsy mety');
+        if (!parsed.settings) parsed.settings = JSON.parse(JSON.stringify(DEFAULT_DATA.settings));
+        DATA = parsed;
+        saveData();
+        selectedCategory = DATA.categoryOrder[0];
+        fullRefresh();
+        renderPayMethods();
+        showMsg(backupMsg, 'Voa-import soa aman-tsara!', false);
+      } catch (err) {
+        showMsg(backupMsg, 'Tsy mety ilay fichier: ' + err.message, true);
+      }
+    };
+    reader.readAsText(file);
+    importDataInput.value = '';
+  });
+
+  resetDataBtn.addEventListener('click', function () {
+    if (!confirm('Ho very daholo ny fanovana rehetra nataonao, hiverina amin\'ny tahirin-kevitra tany am-boalohany. Hanohy ve ianao?')) return;
+    DATA = JSON.parse(JSON.stringify(DEFAULT_DATA));
+    saveData();
+    selectedCategory = DATA.categoryOrder[0];
+    fullRefresh();
+    renderPayMethods();
+    showMsg(backupMsg, 'Naverina tany am-boalohany ny tahirin-kevitra.', false);
+  });
+
+  function refreshAdminUI() {
+    refreshStats();
+    renderAdminCategoryChips();
+    populateCategorySelects();
+    renderAdminProductList();
+    populateSettingsForm();
+  }
+
+  function fullRefresh() {
+    renderCategoryTabs();
+    if (!DATA.categories[selectedCategory]) selectedCategory = DATA.categoryOrder[0];
+    selectCategory(selectedCategory);
+    if (!adminPanel.hidden) refreshAdminUI();
+  }
+
+  // ==================== LANGUAGE SWITCH ====================
+  function setTextById(id, text) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = text;
+  }
+
+  function applyLanguage(lang) {
+    if (!TRANSLATIONS[lang]) lang = 'mg';
+    currentLang = lang;
+    try { localStorage.setItem(LANG_STORAGE_KEY, currentLang); } catch (err) {}
+
+    document.querySelectorAll('.lang-btn').forEach(function (btn) {
+      btn.classList.toggle('active', btn.getAttribute('data-lang') === currentLang);
+    });
+
+    setTextById('guideBtnText', T('guideBtn'));
+    setTextById('heroEyebrowText', T('heroEyebrow'));
+    setTextById('heroDescText', T('heroDesc'));
+    setTextById('catalogueBtnText', T('catalogueBtn'));
+    setTextById('catalogueIntroText', T('catalogueIntro'));
+    setTextById('catalogueNoteText', T('catalogueNote'));
+    setTextById('modalTitleAdminText', T('modalTitleAdmin'));
+    setTextById('modalSubAdminText', T('modalSubAdmin'));
+    setTextById('modalCancelBtn', T('modalCancel'));
+    setTextById('modalConfirmBtnText', T('modalConfirm'));
+    setTextById('payInstruction1Text', T('payInstruction1'));
+    setTextById('payInstruction2Text', T('payInstruction2'));
+    setTextById('payInstruction3Text', T('payInstruction3'));
+    setTextById('whatsappBtnText', T('whatsappBtn'));
+    setTextById('payPlaceholderNoteText', T('payPlaceholderNote'));
+    setTextById('footerCopyrightText', T('footerCopyright'));
+    setTextById('footerProtectText', T('footerProtect'));
+
+    document.querySelectorAll('.chip[data-category]').forEach(function (chip) {
+      var key = chip.getAttribute('data-category');
+      var labelEl = chip.querySelector('.chip-label');
+      if (labelEl) labelEl.textContent = T('cat' + key) || key;
+    });
+
+    // Re-render dynamic parts so translated category labels / product-grid strings refresh
+    renderCategoryTabs();
+    if (!DATA.categories[selectedCategory]) selectedCategory = DATA.categoryOrder[0];
+    var cat = DATA.categories[selectedCategory];
+    if (cat) {
+      catalogueLabelEl.textContent = categoryLabel(selectedCategory, cat.label);
+      catalogueTitleNameEl.textContent = categoryLabel(selectedCategory, cat.label);
+    }
+    renderProductGrid();
+    renderPayMethods();
+  }
+
+  document.querySelectorAll('.lang-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      applyLanguage(btn.getAttribute('data-lang'));
+    });
+  });
+
+  applyLanguage(currentLang);
+})();
+</script>
+
+</body>
+</html>
